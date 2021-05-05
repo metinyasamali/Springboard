@@ -1,0 +1,394 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "This exercise will require you to pull some data from the Qunadl API. Qaundl is currently the most widely used aggregator of financial market data."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "As a first step, you will need to register a free account on the http://www.quandl.com website."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "After you register, you will be provided with a unique API key, that you should store:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Store the API key as a string - according to PEP8, constants are always named in all upper case\n",
+    "API_KEY = 'hd82DrHyxakmJYTg3_Va'"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Qaundl has a large number of data sources, but, unfortunately, most of them require a Premium subscription. Still, there are also a good number of free datasets."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "For this mini project, we will focus on equities data from the Frankfurt Stock Exhange (FSE), which is available for free. We'll try and analyze the stock prices of a company called Carl Zeiss Meditec, which manufactures tools for eye examinations, as well as medical lasers for laser eye surgery: https://www.zeiss.com/meditec/int/home.html. The company is listed under the stock ticker AFX_X."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "You can find the detailed Quandl API instructions here: https://docs.quandl.com/docs/time-series"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "While there is a dedicated Python package for connecting to the Quandl API, we would prefer that you use the *requests* package, which can be easily downloaded using *pip* or *conda*. You can find the documentation for the package here: http://docs.python-requests.org/en/master/ "
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Finally, apart from the *requests* package, you are encouraged to not use any third party Python packages, such as *pandas*, and instead focus on what's available in the Python Standard Library (the *collections* module might come in handy: https://pymotw.com/3/collections/ ).\n",
+    "Also, since you won't have access to DataFrames, you are encouraged to us Python's native data structures - preferably dictionaries, though some questions can also be answered using lists.\n",
+    "You can read more on these data structures here: https://docs.python.org/3/tutorial/datastructures.html"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Keep in mind that the JSON responses you will be getting from the API map almost one-to-one to Python's dictionaries. Unfortunately, they can be very nested, so make sure you read up on indexing dictionaries in the documentation provided above."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# First, import the relevant modules\n",
+    "import json\n",
+    "import urllib.request as req"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 3,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Now, call the Quandl API and pull out a small sample of the data (only one day) to get a glimpse\n",
+    "# into the JSON structure that will be returned\n",
+    "# Now, call the Quandl API and pull out a small sample of the data (only one day) to get a glimpse\n",
+    "# into the JSON structure that will be returned\n",
+    "\n",
+    "data = json.loads(req.urlopen(\"https://www.quandl.com/api/v3/datasets/FSE/AFX_X.json?start_date=2014-01-02&end_date=2014-01-03&collapse=daily&transform=rdiff&api_key=\"+API_KEY).read().\\\n",
+    "                  decode('utf8'))\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 4,
+   "metadata": {
+    "scrolled": true
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "{'dataset': {'id': 10095370,\n",
+       "  'dataset_code': 'AFX_X',\n",
+       "  'database_code': 'FSE',\n",
+       "  'name': 'Carl Zeiss Meditec (AFX_X)',\n",
+       "  'description': 'Stock Prices for Carl Zeiss Meditec (2020-11-02) from the Frankfurt Stock Exchange.<br><br>Trading System: Xetra<br><br>ISIN: DE0005313704',\n",
+       "  'refreshed_at': '2020-12-01T14:48:09.907Z',\n",
+       "  'newest_available_date': '2020-12-01',\n",
+       "  'oldest_available_date': '2000-06-07',\n",
+       "  'column_names': ['Date',\n",
+       "   'Open',\n",
+       "   'High',\n",
+       "   'Low',\n",
+       "   'Close',\n",
+       "   'Change',\n",
+       "   'Traded Volume',\n",
+       "   'Turnover',\n",
+       "   'Last Price of the Day',\n",
+       "   'Daily Traded Units',\n",
+       "   'Daily Turnover'],\n",
+       "  'frequency': 'daily',\n",
+       "  'type': 'Time Series',\n",
+       "  'premium': False,\n",
+       "  'limit': None,\n",
+       "  'transform': 'rdiff',\n",
+       "  'column_index': None,\n",
+       "  'start_date': '2014-01-02',\n",
+       "  'end_date': '2014-01-03',\n",
+       "  'data': [['2014-01-03',\n",
+       "    -0.0082508250825082,\n",
+       "    -0.011712439418417,\n",
+       "    0.010938157341186,\n",
+       "    0.011993382961125,\n",
+       "    None,\n",
+       "    -0.63213420651296,\n",
+       "    -0.63156268026302,\n",
+       "    None,\n",
+       "    None,\n",
+       "    None]],\n",
+       "  'collapse': 'daily',\n",
+       "  'order': None,\n",
+       "  'database_id': 6129}}"
+      ]
+     },
+     "execution_count": 4,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# Inspect the JSON structure of the object you created, and take note of how nested it is,\n",
+    "# as well as the overall structure\n",
+    "data"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "These are your tasks for this mini project:\n",
+    "\n",
+    "1. Collect data from the Franfurt Stock Exchange, for the ticker AFX_X, for the whole year 2017 (keep in mind that the date format is YYYY-MM-DD).\n",
+    "2. Convert the returned JSON object into a Python dictionary.\n",
+    "3. Calculate what the highest and lowest opening prices were for the stock in this period.\n",
+    "4. What was the largest change in any one day (based on High and Low price)?\n",
+    "5. What was the largest change between any two days (based on Closing Price)?\n",
+    "6. What was the average daily trading volume during this year?\n",
+    "7. (Optional) What was the median trading volume during this year. (Note: you may need to implement your own function for calculating the median.)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 5,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "data = json.loads(req.urlopen(\"https://www.quandl.com/api/v3/datasets/FSE/AFX_X.json?start_date=2017-01-01&end_date=2017-12-31&collapse=daily&transform=rdiff&api_key=\"+API_KEY).read().\\\n",
+    "                  decode('utf8'))\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 6,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "<class 'dict'>\n"
+     ]
+    }
+   ],
+   "source": [
+    "print(type(data))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 7,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "dict_keys(['id', 'dataset_code', 'database_code', 'name', 'description', 'refreshed_at', 'newest_available_date', 'oldest_available_date', 'column_names', 'frequency', 'type', 'premium', 'limit', 'transform', 'column_index', 'start_date', 'end_date', 'data', 'collapse', 'order', 'database_id'])"
+      ]
+     },
+     "execution_count": 7,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "data.keys()\n",
+    "data['dataset'].keys()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 8,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "           0         1         2         3         4     5         6   \\\n",
+      "0  2017-12-29  0.002130  0.002316  0.000389  0.003101  None -0.148057   \n",
+      "1  2017-12-28  0.003887 -0.001349  0.013199 -0.004245  None -0.292279   \n",
+      "2  2017-12-27  0.007835  0.007573 -0.003142  0.009743  None -0.192693   \n",
+      "3  2017-12-22 -0.002150 -0.000388  0.000393 -0.001556  None -0.410148   \n",
+      "4  2017-12-21 -0.013878 -0.009992 -0.005859  0.002536  None  1.384980   \n",
+      "\n",
+      "         7     8     9     10  \n",
+      "0 -0.146125  None  None  None  \n",
+      "1 -0.290155  None  None  None  \n",
+      "2 -0.188067  None  None  None  \n",
+      "3 -0.410634  None  None  None  \n",
+      "4  1.367365  None  None  None  \n"
+     ]
+    }
+   ],
+   "source": [
+    "import pandas as pd\n",
+    "\n",
+    "df = pd.DataFrame(data['dataset']['data'])\n",
+    "\n",
+    "print(df.head(5))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 9,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "df.columns = data['dataset']['column_names']"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 10,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Max opening price is 0.041013824884793 \n",
+      "Min opening price is -0.084928229665072\n"
+     ]
+    }
+   ],
+   "source": [
+    "print(\"Max opening price is \" + str(max(df['Open'])), \"\\nMin opening price is \" + str(min(df['Open'])))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 11,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "The largest change in any one day (based on High and Low price) is 0.04014597697399\n"
+     ]
+    }
+   ],
+   "source": [
+    "diff = abs(df['High']-df['Low'])\n",
+    "print(\"The largest change in any one day (based on High and Low price) is \" + str(max(diff)))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 12,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "The largest change between any two days (based on Closing Price) is 0.097627197430696\n"
+     ]
+    }
+   ],
+   "source": [
+    "diff = (max(df['Close'])) - (min(df['Close']))\n",
+    "print(\"The largest change between any two days (based on Closing Price) is \" + str(diff))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 13,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "The average daily trading volume during this year is 7.33419175718327\n"
+     ]
+    }
+   ],
+   "source": [
+    "import numpy as np\n",
+    "avg = np.mean(df['Traded Volume'])\n",
+    "#avg = np.mean(abs(df['Traded Volume']))\n",
+    "print(\"The average daily trading volume during this year is \"+ str(avg))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 14,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "The average daily trading volume during this year is -0.000971311428940335\n"
+     ]
+    }
+   ],
+   "source": [
+    "med = np.median((df['Traded Volume']))\n",
+    "print(\"The average daily trading volume during this year is \"+ str(med))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.7.3"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 2
+}
